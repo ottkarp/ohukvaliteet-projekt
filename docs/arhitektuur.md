@@ -1,4 +1,3 @@
-```markdown
 # Arhitektuur
 
 ## Äriküsimus
@@ -20,7 +19,6 @@ Millal võib valitud Eesti linnades (nt Tallinn, Tartu, Pärnu, Narva) õhukvali
 
 ## Andmevoog
 
-```mermaid
 flowchart LR
     seed[Staatiline asukohtade CSV] --> dim[(mart.dim_location)]
     api[Open-Meteo Air Quality API] --> ingest[Python ingest skript]
@@ -33,7 +31,6 @@ flowchart LR
     summary --> dashboard
     staging --> quality[Andmekvaliteedi testid]
     scheduler[Cron scheduler] --> ingest
-```
 
 ## Andmebaasi kihid
 
@@ -64,4 +61,3 @@ flowchart LR
 
 Projekt kasutab ainult avalikke õhukvaliteedi andmeid (Open-Meteo). Isikuandmeid ega tundlikku äriinfot ei koguta ega töödelda. 
 Andmebaasi kasutajanimed, paroolid ja pordid on defineeritud `.env` failis. Repositooriumisse laetakse ainult `.env.example` fail, päris `.env` fail on lisatud `.gitignore` nimekirja, et saladused ei lekiks GitHubi.
-```
