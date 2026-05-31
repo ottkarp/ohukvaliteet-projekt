@@ -1,0 +1,48 @@
+services:
+  db:
+    image: pgduckdb/pgduckdb:18-v1.1.1
+    container_name: ohukvaliteet-db
+    environment:
+      POSTGRES_USER: praktikum
+      POSTGRES_PASSWORD: praktikum
+      POSTGRES_DB: praktikum
+    ports:
+      - "55432:5432"
+    volumes:
+      - ./init:/docker-entrypoint-initdb.d
+
+  pipeline:
+    image: python:3.13-slim
+    container_name: ohukvaliteet-pipeline
+    environment:
+      DB_HOST: db
+      DB_PORT: "5432"
+      DB_USER: praktikum
+      DB_PASSWORD: praktikum
+      DB_NAME: praktikum
+    depends_on:
+      - db
+    volumes:
+      - ./scripts:/app/scripts
+    working_dir: /app
+    command: ["sleep", "infinity"]
+
+  dashboard:
+    image: python:3.13-slim
+    container_name: ohukvaliteet-dashboard
+    environment:
+      DB_HOST: db
+      DB_PORT: "5432"
+      DB_USER: praktikum
+      DB_PASSWORD: praktikum
+      DB_NAME: praktikum
+    depends_on:
+      - db
+    volumes:
+      - ./dashboard:/app/dashboard
+    working_dir: /app
+    command: >
+      bash -c "pip install streamlit pandas psycopg2-binary altair && 
+      streamlit run dashboard/app.py --server.address=0.0.0.0 --server.port=8501"
+    ports:
+      - "8501:8501"
