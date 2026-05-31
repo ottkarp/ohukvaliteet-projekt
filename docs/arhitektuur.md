@@ -18,7 +18,7 @@ Millal võib valitud Eesti linnades (nt Tallinn, Tartu, Pärnu, Narva) õhukvali
 | `seeds/asukohad.csv` | Staatiline CSV fail | Ei, staatiline | Linnade koordinaadid (laius- ja pikkuskraadid) API päringute tegemiseks |
 
 ## Andmevoog
-
+```mermaid
 flowchart LR
     seed[Staatiline asukohtade CSV] --> dim[(mart.dim_location)]
     api[Open-Meteo Air Quality API] --> ingest[Python ingest skript]
@@ -31,6 +31,7 @@ flowchart LR
     summary --> dashboard
     staging --> quality[Andmekvaliteedi testid]
     scheduler[Cron scheduler] --> ingest
+```
 
 ## Andmebaasi kihid
 
@@ -47,7 +48,7 @@ flowchart LR
 | Andmeallika omanik | Kirjutab Pythoni skripti, mis loeb API-st andmeid ja salvestab need `staging` kihti. | Ott Karp |
 | Transformatsioonide omanik | Kirjutab SQL skriptid, mis viivad andmed `staging` kihist `mart` kihti ja arvutavad mõõdikud. | Ott Karp |
 | Kvaliteedi omanik | Kirjutab SQL testid (nt et PM2.5 ei saa olla negatiivne) ja kontrollib andmete korrektsust. | Ott Karp |
-| Näidikulaua omanik | Seadistab Superset või Streamlit näidikulaua ja loob visuaalid äriküsimusele vastamiseks. | Ott Karp |
+| Näidikulaua omanik | Seadistab Superset või Streamlit näidikulaua ja loob visuaalid äriküsimusele vastamiseks. | Heija-Liis Ristikivi |
 
 ## Riskid
 
