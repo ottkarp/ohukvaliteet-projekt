@@ -66,7 +66,52 @@ def transform_data():
     conn.close()
     print("Mõõdikud arvutatud!")
 
+```python
+def run_quality_tests():
+    print("Käivitan andmekvaliteedi testid...")
+    conn = get_connection()
+    cur = conn.cursor()
+    
+    testid_labitud = True
+
+    # TEST 1: Kas andmebaasis on üldse ridu?
+    cur.execute("SELECT COUNT(*) FROM staging.air_quality_raw;")
+    row_count = cur.fetchone()[0]
+    if row_count > 0:
+        print("✅ TEST 1 PASSED: Staging tabelis on andmed olemas.")
+    else:
+        print("❌ TEST 1 FAILED: Staging tabel on tühi!")
+        testid_labitud = False
+
+    # TEST 2: Kas PM2.5 on negatiivne? (Ei tohiks olla)
+    cur.execute("SELECT COUNT(*) FROM staging.air_quality_raw WHERE pm2_5 < 0;")
+    negative_count = cur.fetchone()[0]
+    if negative_count == 0:
+        print("✅ TEST 2 PASSED: Ühtegi negatiivset PM2.5 väärtust ei leitud.")
+    else:
+        print(f"❌ TEST 2 FAILED: Leiti {negative_count} negatiivset PM2.5 väärtust!")
+        testid_labitud = False
+
+    # TEST 3: Kas asukoha nimi on tühi (NULL)?
+    cur.execute("SELECT COUNT(*) FROM staging.air_quality_raw WHERE location_name IS NULL;")
+    null_count = cur.fetchone()[0]
+    if null_count == 0:
+        print("✅ TEST 3 PASSED: Kõikidel ridadel on asukoha nimi olemas.")
+    else:
+        print(f"❌ TEST 3 FAILED: Leiti {null_count} rida, kus asukoht puudub!")
+        testid_labitud = False
+
+    cur.close()
+    conn.close()
+    
+    if testid_labitud:
+        print("Kõik andmekvaliteedi testid läbiti edukalt!")
+    else:
+        print("Hoiatus: Mõned andmekvaliteedi testid ebaõnnestusid.")
+
 if __name__ == "__main__":
     ingest_data()
     transform_data()
+    run_quality_tests()
     print("Kogu toru töötas edukalt!")
+```
