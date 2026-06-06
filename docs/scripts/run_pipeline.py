@@ -66,7 +66,6 @@ def transform_data():
     conn.close()
     print("Mõõdikud arvutatud!")
 
-```python
 def run_quality_tests():
     print("Käivitan andmekvaliteedi testid...")
     conn = get_connection()
@@ -114,4 +113,3 @@ if __name__ == "__main__":
     transform_data()
     run_quality_tests()
     print("Kogu toru töötas edukalt!")
-```
